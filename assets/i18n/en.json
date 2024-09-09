@@ -1,0 +1,21 @@
+{
+  "ERROR": {
+    "TITLE": "Oops, something went wrong!",
+    "MESSAGE": "We're sorry, but an unexpected error has occurred. Please try again later or contact support if the issue persists.",
+    "WEATHER_TIP": "Sometimes you can checkout the weather by just looking through the window.",
+    "CLOTHING_TIP": "Additional tip, check out how the people outside are dressed."
+  },
+  "SEARCH": {
+    "PLACEHOLDER": "Enter city name..."
+  },
+  "COMMON": {
+    "TODAY": "Today",
+    "TOMORROW": "Tomorrow",
+    "NA": "N/A"
+  },
+  "WEATHER": {
+    "SUNNY": "Sunny",
+    "RAINY": "Rainy",
+    "CLOUDY": "Cloudy"
+  }
+}
