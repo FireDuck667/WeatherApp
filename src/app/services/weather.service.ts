@@ -12,7 +12,7 @@ import {TranslocoService} from '@ngneat/transloco';
 export class WeatherService {
   private apiUrl = environment.tomorrowIO.baseUrl;
   private apiKey = environment.tomorrowIO.apiKey;
-  private defaultLocation = 'Mitzpe Ramon Israel';
+  private defaultCoordinates = {lat: 31.7683, lng: 35.2137};
 
   constructor(private http: HttpClient, private translocoService: TranslocoService) {
   }
@@ -21,19 +21,23 @@ export class WeatherService {
     return new Observable((observer) => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
-          (position) => {
-            observer.next({
-              lat: position.coords.latitude,
-              lng: position.coords.longitude,
-            });
-            observer.complete();
-          },
-          (error) => {
-            observer.error(error);
-          }
+            (position) => {
+              observer.next({
+                lat: position.coords.latitude,
+                lng: position.coords.longitude,
+              });
+              observer.complete();
+            },
+            (error) => {
+              // Use default coordinates if there's an error (e.g., permission denied)
+              observer.next(this.defaultCoordinates);
+              observer.complete();
+            }
         );
       } else {
-        observer.error(new Error('Geolocation not supported'));
+        // Use default coordinates if geolocation is not supported
+        observer.next(this.defaultCoordinates);
+        observer.complete();
       }
     });
   }
@@ -42,8 +46,8 @@ export class WeatherService {
     const currentLanguage = this.translocoService.getActiveLang();
     const geocodingUrl = `${environment.reversGeocode.baseUrl}reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=${currentLanguage}`;
     return this.http.get<{ city?: string; locality?: string }>(geocodingUrl).pipe(
-      map((response) => response.city || response.locality || 'Unknown location'),
-      catchError(() => of('Unknown location'))
+        map((response) => response.city || response.locality || 'Unknown location'),
+        catchError(() => of('Unknown location'))
     );
   }
 
@@ -54,7 +58,7 @@ export class WeatherService {
 
   private fetchForecast(url: string): Observable<FetchForecastResponse> {
     return this.http.get<FetchForecastResponse>(url).pipe(
-      catchError(() => of({} as FetchForecastResponse))
+        catchError(() => of({} as FetchForecastResponse))
     );
   }
 
@@ -66,24 +70,22 @@ export class WeatherService {
       const forecastUrl = this.buildForecastUrl(lat, lng);
       console.log(forecastUrl);
       return this.getCityNameFromCoordinates(lat, lng).pipe(
-        switchMap((cityName) =>
-          this.fetchForecast(forecastUrl).pipe(
-            map((forecast) => {
-              console.log(forecast);
-              return {forecast, cityName}
-            })
-          )
-        ),
-        catchError(() => of({forecast: {} as FetchForecastResponse, cityName: 'Unknown location'}))
+          switchMap((cityName) =>
+              this.fetchForecast(forecastUrl).pipe(
+                  map((forecast) => {
+                    console.log(forecast);
+                    return {forecast, cityName}
+                  })
+              )
+          ),
+          catchError(() => of({forecast: {} as FetchForecastResponse, cityName: 'Unknown location'}))
       );
     };
-
     if (coordinates) {
       return getForecastWithCoordinates(coordinates.lat, coordinates.lng);
     } else {
       return this.getBrowserCoordinates().pipe(
-        switchMap(({lat, lng}) => getForecastWithCoordinates(lat, lng)),
-        catchError(() => of({forecast: {} as FetchForecastResponse, cityName: 'Unknown location'}))
+          switchMap(({lat, lng}) => getForecastWithCoordinates(lat, lng))
       );
     }
   }

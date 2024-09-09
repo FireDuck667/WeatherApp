@@ -40,7 +40,6 @@ export class WeatherMachine {
     actions: {
       assignDataToContext: assign<WeatherMachineContext, WeatherEvent>((context, event) => {
         if (isFetchSuccess(event)) {
-          console.log(event.data);
           return {
             data: event.data,
           };
