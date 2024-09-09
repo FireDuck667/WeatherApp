@@ -1,0 +1,21 @@
+{
+  "ERROR": {
+    "TITLE": "Ops, algo deu errado!",
+    "MESSAGE": "Lamentamos, mas ocorreu um erro inesperado. Por favor, tente novamente mais tarde ou entre em contato com o suporte se o problema persistir.",
+    "WEATHER_TIP": "Às vezes, você pode verificar o clima apenas olhando pela janela.",
+    "CLOTHING_TIP": "Dica adicional, observe como as pessoas lá fora estão vestidas."
+  },
+  "SEARCH": {
+    "PLACEHOLDER": "Digite o nome da cidade..."
+  },
+  "COMMON": {
+    "TODAY": "Hoje",
+    "TOMORROW": "Amanhã",
+    "NA": "N/D"
+  },
+  "WEATHER": {
+    "SUNNY": "Ensolarado",
+    "RAINY": "Chuvoso",
+    "CLOUDY": "Nublado"
+  }
+}
