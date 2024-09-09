@@ -29,13 +29,11 @@ export class WeatherService {
               observer.complete();
             },
             (error) => {
-              // Use default coordinates if there's an error (e.g., permission denied)
               observer.next(this.defaultCoordinates);
               observer.complete();
             }
         );
       } else {
-        // Use default coordinates if geolocation is not supported
         observer.next(this.defaultCoordinates);
         observer.complete();
       }
